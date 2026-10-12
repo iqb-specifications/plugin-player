@@ -91,11 +91,7 @@ Der Code zur Initialisierung sendet als letzten Schritt eine Nachricht an den Ho
 
 ## 3 Start Command
 
-::: {.callout-tip}
-
-Ausführliche Darstellung des Start-Kommandos siehe [unten](  ).
-
-:::
+> Ausführliche Darstellung des Start-Kommandos siehe [unten](#start-kommando-vopstartcommand).
 
 Nachdem der Host die Bereitschaftsmeldung erhalten hat, schickt er die Unit-Definition: Parameter `unitDefinition`, serialisiert als String. Damit stellt der Player -- der nach der Initialisierung zunächst eine leere Seite zeigt -- alle Elemente dar, die in der Unit-Definition vorgesehen sind und bereitet die Interaktionselemente vor.
 
@@ -109,11 +105,7 @@ Weitere Parameter:
  
 ## 4 State Changed Notification
 
-::: {.callout-tip}
-
-Ausführliche Darstellung der Meldung zur Statusänderung siehe [unten]( ).
-
-:::
+> Ausführliche Darstellung der Meldung zur Statusänderung siehe [unten](#meldung-von-änderungen-vopstatechangednotification).
 
 Sobald eine Interaktion stattgefunden hat, die als Antwort wichtig wäre oder die bei einem wiederholten Aufruf der Unit wiederhergestellt werden soll, meldet der Player diese Änderung. Parameter:
 
@@ -169,13 +161,7 @@ Diese Nachricht soll die Host-Anwendung darüber informieren, dass während der 
 * `sessionId`: Die Kennung aus dem Start-Kommando, um die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit zu unterstützen.
 * `code`, `message`: Strings, die den Fehler beschreiben.
 
-::: {.callout-caution}
-
-## Subject to change
-
-Für den Code sollte es eine Liste von möglichen Werten geben, damit die Host-Anwendungen konsistent reagieren. Aktuell liegen hierzu noch zu wenig Erfahrungen vor. Beispiele: `AUDIO_CORRUPT`, `GEOGEBRA_CRASH`
-
-:::
+> Achtung: Für den Code sollte es eine Liste von möglichen Werten geben, damit die Host-Anwendungen konsistent reagieren. Aktuell liegen hierzu noch zu wenig Erfahrungen vor. Beispiele: `AUDIO_CORRUPT`, `GEOGEBRA_CRASH`
 
 ## 10 Widget Call
 
@@ -303,15 +289,7 @@ Mögliche Werte:
 
 Eine Validierung kann problematisch sein, wenn Elemente eines Standard-Html-Formulars verwendet werden. Wenn als Typ eines `<input>`-Elementes beispielsweise eine Zahl gesetzt ist, dann wird eine Texteingabe nicht verfügbar. Die Validierung verhindert also den Zugriff auf fehlerhafte Eingaben.
 
-:::
-
-::: {.callout-tip}
-
-## Hinweis "required"
-
-Ob eine Antwort als "erforderlich" -- also als "required" -- gewertet wird, sollte gezielt gesteuert werden. Das Player-Modul sollte "responses complete" nur für die als erforderlich markierten Elemente melden. Dann meldet der Player sofort nach Start der Unit "responses complete", wenn die Unit keine Elemente mit der Markierung "erforderlich" hat.
-
-:::
+> Hinweis "required": Ob eine Antwort als "erforderlich" -- also als "required" -- gewertet wird, sollte gezielt gesteuert werden. Das Player-Modul sollte "responses complete" nur für die als erforderlich markierten Elemente melden. Dann meldet der Player sofort nach Start der Unit "responses complete", wenn die Unit keine Elemente mit der Markierung "erforderlich" hat.
 
 ### `unitStateDataType`
 
@@ -338,13 +316,7 @@ Mögliche Werte:
 * `CONCAT_SCROLL`: Alle Seiten werden zu einer einzigen Seite zusammengelegt (gestapelt). Die Testperson scrollt vertikal und bemerkt nicht, dass es mehrere Seiten gibt. Sollte eine Seitennavigation aktiv sein, wird entsprechend gescrollt.
 * `CONCAT_SCROLL_SNAP`: Alle Seiten werden zu einer einzigen Seite zusammengelegt, jedoch ist stets nur eine Seite zu sehen. Die Testperson scrollt vertikal und die Seiten "schnappen" in den Sichtbereich, so dass nie zwei Seiten gleichzeitig zu sehen sind. Dieser Modus ist vorteilhaft, wenn die Zeit, die eine Testperson auf einer Seite verbringt, gemessen werden soll. Man erreicht eine intuitive Art des Seitenwechsels, verliert aber nicht die Information "time on page".
 
-::: {.callout-caution}
-
-## Scroll-snap nicht verlässlich
-
-Der Scroll-snap-Modus beim Blättern ist eine standardisierte Html-Eigenschaft. Allerdings ist dieses Verhalten unterschiedlich implementiert in den Browsern bzw. Betriebssystemen. Vor der Nutzung sollten ausgiebige Tests sicherstellen, dass sich alle verwendeten Geräte wie gewünscht verhalten.
-
-:::
+> Achtung: Scroll-snap ist nicht verlässlich. Der Scroll-snap-Modus beim Blättern ist eine standardisierte Html-Eigenschaft. Allerdings ist dieses Verhalten unterschiedlich implementiert in den Browsern bzw. Betriebssystemen. Vor der Nutzung sollten ausgiebige Tests sicherstellen, dass sich alle verwendeten Geräte wie gewünscht verhalten.
 
 ### `printMode`
 
