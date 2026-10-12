@@ -45,7 +45,7 @@ Die Spezifikation der API finden Sie [hier](https://iqb-specifications.github.io
 
 # Kommunikationsmodell
 
-```{mermaid}
+```mermaid
 
 sequenceDiagram
     autonumber
