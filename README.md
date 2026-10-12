@@ -46,6 +46,7 @@ Die Spezifikation der API finden Sie [hier](https://iqb-specifications.github.io
 # Kommunikationsmodell
 
 ```{mermaid}
+
 sequenceDiagram
     autonumber
     participant HA as Host-Anwendung
@@ -77,6 +78,7 @@ sequenceDiagram
             HA->>VM:vopWidgetReturn
         end
     end
+
 ```
 
 ## 1 Initialisierung
