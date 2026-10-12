@@ -87,7 +87,7 @@ Der Host richtet ein `<iframe>`-Element ein und setzt für das `srcdoc`-Attribut
 
 ## 2 Ready Notification
 
-Der Code zur Initialisierung sendet als letzten Schritt eine Nachricht an den Host, dass das Plugin bereit sei für das Start-Kommando. Als Payload wird das [Metadaten-Objekt](../intro/metadata.qmd) mitgeschickt -- hier allerdings als String serialisiert, um nicht bei jeder Änderung der Metadaten-Spezifikation alle Modul-API ändern zu müssen.
+Der Code zur Initialisierung sendet als letzten Schritt eine Nachricht an den Host, dass das Plugin bereit sei für das Start-Kommando. Als Payload wird das [Metadaten-Objekt](https://iqb-specifications.github.io/concepts/plugins/metadata.html) mitgeschickt -- hier allerdings als String serialisiert, um nicht bei jeder Änderung der Metadaten-Spezifikation alle Modul-API ändern zu müssen.
 
 ## 3 Start Command
 
@@ -100,8 +100,8 @@ Dem Player wird mit `sessionId` eine Kennung mitgeschickt, die der Player anschl
 Weitere Parameter:
 
 * `unitDefinitionType`: Sollte es Varianten oder Versionen von Unit-Definitionen geben, kann dies hier dem Player mitgeteilt werden. Alternativ (oder parallel) kann natürlich diese Information als Teil der Datenstruktur der Unit-Definition übergeben werden.
-* `unitState`: Sollte die Unit wiederholt präsentiert werden, soll der vorherige Bearbeitungsstatus wiederhergestellt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](vopStartCommand.qmd).
-* `playerConfig`: Hier werden Parameter übergeben, die die Anzeige und die Interaktion steuern. Beispielsweise kann die Art und Weise des Blätterns zur nächsten Seite festgelegt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](vopStartCommand.qmd).
+* `unitState`: Sollte die Unit wiederholt präsentiert werden, soll der vorherige Bearbeitungsstatus wiederhergestellt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#unitstate).
+* `playerConfig`: Hier werden Parameter übergeben, die die Anzeige und die Interaktion steuern. Beispielsweise kann die Art und Weise des Blätterns zur nächsten Seite festgelegt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#playerconfig).
  
 ## 4 State Changed Notification
 
@@ -111,9 +111,9 @@ Sobald eine Interaktion stattgefunden hat, die als Antwort wichtig wäre oder di
 
 * `sessionId`: Die Kennung aus dem Start-Kommando, um die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit zu unterstützen.
 * `timeStamp`: Ein String im Standard-Format [date-time](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-date-time-string-format). Die Nutzung dieser Information ist dem Host überlassen, soll aber vor allem die korrekte Reihenfolge vieler asynchron eintreffender Nachrichten sicherstellen.
-* `unitState`: Daten der Antworten im weiteren Sinne. Diese dienen der Auswertung und der Wiederherstellung beim Zurückblättern. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](vopStateChangedNotification.qmd).
-* `playerState`: Hier schickt der Player Informationen, die dem Host helfen können, die UI anzupassen. Beispielsweise wird so ein Wechsel der Seite berichtet, damit der Host in der Navigationsdarstellung die aktive Seite anders darstellt. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](vopStateChangedNotification.qmd).
-* `log`: Hierüber werden Log-Einträge geschickt. Dies sind Ereignisse, die nicht unbedingt einen Status ändern, sondern nur der Rekonstruktion der Beantwortung über die Zeit dienen können. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](vopStateChangedNotification.qmd).
+* `unitState`: Daten der Antworten im weiteren Sinne. Diese dienen der Auswertung und der Wiederherstellung beim Zurückblättern. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#unitstate).
+* `playerState`: Hier schickt der Player Informationen, die dem Host helfen können, die UI anzupassen. Beispielsweise wird so ein Wechsel der Seite berichtet, damit der Host in der Navigationsdarstellung die aktive Seite anders darstellt. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#playerstate).
+* `log`: Hierüber werden Log-Einträge geschickt. Dies sind Ereignisse, die nicht unbedingt einen Status ändern, sondern nur der Rekonstruktion der Beantwortung über die Zeit dienen können. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#log).
 
 ## 5 Page Navigation Command
 
@@ -152,7 +152,7 @@ Diese Nachricht soll den Player darüber informieren, dass sich die Konfiguratio
 Parameter:
 
 * `sessionId`: Die Kennung aus dem Start-Kommando, um die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit zu unterstützen.
-* `playerConfig`: Bitte diese Datenstruktur [hier nachlesen](vopStartCommand.html#unitnumber-unittitle-unitid)
+* `playerConfig`: Bitte diese Datenstruktur [hier nachlesen](#playerconfig)
 
 ## 9 Runtime Error Notification
 
