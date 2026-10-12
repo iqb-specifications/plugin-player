@@ -1,14 +1,9 @@
 asyncapi: 2.5.0
 info:
-  title: Verona Interfaces Specification "Player"
-  version: '6.3.0'
+  title: TBA Plugin Specification "Player"
+  version: '7.0.0'
   description: |
-    This is one part of the [Verona Online Assessment Standards](https://verona-interfaces.github.io). All messages are sent via the postMessage function of the html page. The player takes the page root of its parent as target (parent.window), and the application binds the function call to the iframe element of the player.
-
-    Most important, the message body carries as first parameter the operationId of the message.
-
-    The html page MUST contain a script-tag with metadata. The syntax and structure of this data are described [here](https://verona-interfaces.github.io/intro/metadata.html).
-
+    This is one part of the [TBA Plugin Standards](https://iqb-specifications.github.io/concepts/plugins/).
   license:
     name: CC0-1.0
     url: http://creativecommons.org/publicdomain/zero/1.0/
@@ -31,7 +26,7 @@ channels:
             metadata:
               type: string
               description: Via this property, the player sends the stringified metadata object defined as json-ld
-                in the header of the html file. See [here](https://github.com/verona-interfaces/metadata/#readme) for
+                in the header of the html file. See [here](https://iqb-specifications.github.io/concepts/plugins/metadata.html) for
                 more information.
           required:
             - metadata
@@ -92,7 +87,7 @@ channels:
               type: string
               format: date-time
               description: Ensures, that later arriving states are ignored.
-              example: "2021-11-15T10:22:25Z"
+              example: "2027-11-15T10:22:25Z"
             unitState:
               $ref: "#/components/schemas/UnitState"
             playerState:
@@ -233,10 +228,9 @@ channels:
             widgetType:
               type: string
               enum:
-                - WIDGET_CALC
-                - WIDGET_PERIODIC_TABLE
-                - WIDGET_MOLECULE_EDITOR
-                - UNIT
+                - CALC
+                - PERIODIC_TABLE
+                - MOLECULE_EDITOR
             parameters:
               type: array
               items:
@@ -246,7 +240,7 @@ channels:
               format: byte
           required:
             - sessionId
-            - type
+            - widgetType
 
   vopWidgetReturn:
     publish:
@@ -267,30 +261,6 @@ channels:
               format: byte
           required:
             - sessionId
-
-  vopWindowFocusChangedNotification:
-    subscribe:
-      operationId: vopWindowFocusChangedNotification
-      summary: Window Focus Changed Notification
-      description: In some use cases like exam mode the host must know whether the host or the player has the
-        window's focus. If none of these windows have the focus (i. e. the testee has left the test), some logging or
-        warning could be necessary. The player should listen to the window events 'blur' and 'focus'.
-      message:
-        name: vopWindowFocusChangedNotification
-        payload:
-          type: object
-          properties:
-            timeStamp:
-              type: string
-              format: date-time
-              description: Ensures, that later arriving states are ignored.
-              example: "2021-11-15T10:22:25Z"
-            hasFocus:
-              type: boolean
-              description: true if the player got the focus, false if it lost the focus.
-          required:
-            - timeStamp
-            - hasFocus
 
 components:
   schemas:
@@ -414,10 +384,10 @@ components:
             always intended.
           type: string
           enum:
-            - none
-            - some
-            - complete
-          example: 'none'
+            - NONE
+            - SOME
+            - COMPLETE
+          example: 'NONE'
         responseProgress:
           description: This reports the progress of responding. The host can enable or disable the navigation to the
             next unit depending on that value. The value 'complete' announces not only that all required responses are
@@ -426,10 +396,10 @@ components:
             correctly corresponding to this behaviour.
           type: string
           enum:
-            - none
-            - some
+            - NONE
+            - SOME
             - complete
-          example: 'some'
+          example: 'SOME'
         unitStateDataType:
           type: string
           description: This string specifies the format of the data stored in dataParts (value). Every
@@ -447,12 +417,12 @@ components:
         booklet as well.
       type: string
       enum:
-        - next
-        - previous
-        - first
-        - last
-        - end
-      example: 'next'
+        - NEXT
+        - PREVIOUS
+        - FIRST
+        - LAST
+        - END
+      example: 'NEXT'
 
     SessionIdString:
       description: The session id flags all communication. If a message has no or empty
@@ -490,38 +460,38 @@ components:
             for debugging purposes. This is a guideline. The player can decide what exactly the logging consists of.
           type: string
           enum:
-            - disabled
-            - lean
-            - rich
-            - debug
-          example: 'lean'
+            - DISABLED
+            - LEAN
+            - RICH
+            - DEBUG
+          example: 'LEAN'
         pagingMode:
           description: If the player makes it optional, then the page presentation can be changed by the host. The pages are
             presented separately, with page navigation buttons, concatenated to one big page or concatenated in snap mode (scrolling vertically, but
             only one page is visible at a time).
           type: string
           enum:
-            - separate
-            - buttons
-            - concat-scroll
-            - concat-scroll-snap
-          example: 'concat-scroll'
+            - SEPARATE
+            - BUTTONS
+            - CONCAT_SCROLL
+            - CONCAT_SCROLL_SNAP
+          example: 'CONCAT_SCROLL'
         printMode:
-          description: If this mode is 'on', the host presents the unit as preview for printing. Depending on the unit,
+          description: If this mode is 'ON', the host presents the unit as preview for printing. Depending on the unit,
             the player modifies the presentation by (1) assignment of print styles, (2) ALL unit parts are displayed regardless
             of conditions, (3) all pages are displayed among each other, (4) the height of the given space is ignored
-            (no vertical scrollbars by player). If the mode is set to 'on-with-ids', the player adds control labels to
+            (no vertical scrollbars by player). If the mode is set to 'ON_WITH_IDS', the player adds control labels to
             show the IDs.
           type: string
           enum:
-            - off
-            - on
-            - on-with-ids
-            - selected-elements-only
-          example: 'off'
+            - OFF
+            - ON
+            - ON_WITH_IDS
+            - SELECTED_ELEMENTS_ONLY
+          example: 'OFF'
         elementsToHighlight:
           type: array
-          description: If 'printMode' is 'selected-elements-only', this parameter enumerates all elements to be visible. The player will remove all 
+          description: If 'printMode' is 'SELECTED_ELEMENTS_ONLY', this parameter enumerates all elements to be visible. The player will remove all 
             other elements and pages. Otherwise, the player will bring the elements into the viewport and will set some kind of visual
             accentuation (i. e. colored border). The parameter 'startPage' (see below) will be ignored.
           items:
