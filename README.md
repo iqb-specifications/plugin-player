@@ -28,21 +28,6 @@ If you like to check the html page before committing to main branch,
 
 After that, you can check `public/index.html` in a browser. This file will be ignored by git.
 
-::: {#spec}
-
-Ein Player-Modul dient dem "Abspielen" -- also der Präsentation -- von Units. Es gibt mehrere Anwendungsfälle:
-
-* Anzeige im Testsystem während des Tests
-* Anzeige im Testsystem für den Review
-* Veröffentlichung von Beispielaufgaben
-* Veröffentlichung als permanente Referenz für einen wissenschaftlichen Artikel
-* Voransicht im Autorensystem
-* Druckbare Ansicht für den Export
-* Präsentation während der manuellen Kodierung mit den Antwortdaten einer Testperson
-* Anzeige für Eltern nach dem Test mit den Antwortdaten ihres Kindes
-
-Die Spezifikation der API finden Sie [hier](https://iqb-specifications.github.io/plugin-player/).
-
 # Kommunikationsmodell
 
 ```mermaid
@@ -81,6 +66,8 @@ sequenceDiagram
 
 ```
 
+::: {#spec}
+
 ## 1 Initialisierung
 
 Der Host richtet ein `<iframe>`-Element ein und setzt für das `srcdoc`-Attribut den kompletten Inhalt des Plugins. Das Plugin ist technisch eine Html-Seite, d. h. es wird durch das Laden auch die Ausführung von JavaScript-Code angestoßen, der auf oberster Ebene vorgesehen ist.
@@ -91,7 +78,7 @@ Der Code zur Initialisierung sendet als letzten Schritt eine Nachricht an den Ho
 
 ## 3 Start Command
 
-> Ausführliche Darstellung des Start-Kommandos siehe [unten](#start-kommando-vopstartcommand).
+> Ausführliche Darstellung des Start-Kommandos siehe [unten](#start-kommando).
 
 Nachdem der Host die Bereitschaftsmeldung erhalten hat, schickt er die Unit-Definition: Parameter `unitDefinition`, serialisiert als String. Damit stellt der Player -- der nach der Initialisierung zunächst eine leere Seite zeigt -- alle Elemente dar, die in der Unit-Definition vorgesehen sind und bereitet die Interaktionselemente vor.
 
@@ -100,7 +87,7 @@ Dem Player wird mit `sessionId` eine Kennung mitgeschickt, die der Player anschl
 Weitere Parameter:
 
 * `unitDefinitionType`: Sollte es Varianten oder Versionen von Unit-Definitionen geben, kann dies hier dem Player mitgeteilt werden. Alternativ (oder parallel) kann natürlich diese Information als Teil der Datenstruktur der Unit-Definition übergeben werden.
-* `unitState`: Sollte die Unit wiederholt präsentiert werden, soll der vorherige Bearbeitungsstatus wiederhergestellt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#unitstate).
+* `unitState`: Sollte die Unit wiederholt präsentiert werden, soll der vorherige Bearbeitungsstatus wiederhergestellt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#unit-status).
 * `playerConfig`: Hier werden Parameter übergeben, die die Anzeige und die Interaktion steuern. Beispielsweise kann die Art und Weise des Blätterns zur nächsten Seite festgelegt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#playerconfig).
  
 ## 4 State Changed Notification
@@ -221,27 +208,27 @@ In vorherigen Versionen der Schnittstelle war vorgesehen, dass der Player den Ho
 </details>
 
 
-# Start-Kommando `vopStartCommand`
+# Start-Kommando
 
-## `sessionId`
+Das Start-Kommando hat die Message-Id `vopStartCommand`. 
 
-Dem Player wird mit `sessionId` eine Kennung mitgeschickt, die der Player anschließend in jeder Nachricht verwenden soll. Damit wird die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit unterstützt. Diese ID ist wichtiger, wenn es mehrere Player pro Seite beim Host gibt, die gleichzeitig verwaltet werden sollen.
+* `sessionId`: Dem Player wird mit `sessionId` eine Kennung mitgeschickt, die der Player anschließend in jeder Nachricht verwenden soll. Damit wird die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit unterstützt. Diese ID ist wichtiger, wenn es mehrere Player pro Seite beim Host gibt, die gleichzeitig verwaltet werden sollen.
 
-## `unitDefinition`
+## UI-Definition der Unit
 
-Die Unit-Definition beschreibt das Erscheinungsbild der Unit und ggf. die Interaktionselemente.
+Die UI-Definition der Unit `unitDefinition` beschreibt das Erscheinungsbild der Unit und ggf. die Interaktionselemente.
 
 > Beispiel: Bei einem Player für einen basalen Lesegeschwindigkeitstest besteht die Unit-Definition nur aus einem Text, der durch die Testperson gelesen werden soll, und dann soll einer von zwei Buttons geklickt werden -- "JA" oder "NEIN". So ein Text heißt z. B. "Eis ist warm". Als Antwort wird die Kennung des Buttons -- "A" oder "B" -- geliefert sowie die Zeit in Millisekunden, die von der Präsentation der Unit (entspricht der Bereitschaftsmeldung des Players) bis zum Klicken eines Buttons vergangen ist. Mit dem Klick wird auch gleich eine Anforderung für eine Unit-Navigation "next" abgeschickt. Dieser spezialisierte Player benötigt aufgrund umfangreicher Konventionen nur den Text als Unit-Definition.
 
 Häufig wird es sich bei der Unit-Definition um ein Datenobjekt handeln, das z. B. über `JSON.stringify()` serialisiert wurde. Die Komplexität der übergebenen Daten ist nicht bestimmbar und aus Sicht der Verona-Spezifikationen auch egal. Der Player wird die Datenstruktur wieder zu einem Datenobjekt transformieren, prüfen und auswerten.
 
-## `unitDefinitionType`
+## Typ
 
-Diese Angabe soll dem Player helfen, Missverständnisse bei der Interpretation der Unit-Definition zu vermeiden. Aus Sicht der Host-Anwendung ist es jedoch wichtiger, Namen und Version des erforderlichen Players zu kennen. Wenn bekannt ist, dass Player `XY@3.5` für diese Unit-Definition sinnvollerweise benutzt werden sollte, dann muss der Host diesen Player besorgen. Dann spielt der Typ der Unit-Definition eine untergeordnete Rolle.
+Der Typ der UI-Definition `unitDefinitionType` soll dem Player helfen, Missverständnisse bei der Interpretation der Unit-Definition zu vermeiden. Aus Sicht der Host-Anwendung ist es jedoch wichtiger, Namen und Version des erforderlichen Players zu kennen. Wenn bekannt ist, dass Player `XY@3.5` für diese Unit-Definition sinnvollerweise benutzt werden sollte, dann muss der Host diesen Player besorgen. Dann spielt der Typ der Unit-Definition eine untergeordnete Rolle.
 
-## `unitState`
+## Unit-Status
 
-Hierbei handelt es sich um dasselbe Objekt, das der Player an den Host sendet, wenn sich der Status ändert. Wenn der Player diese Datenstruktur im Startkommando bekommt, stellt er einen vorherigen Bearbeitungsstand wieder her und meldet als neuen Status nur Abweichungen zu diesem Stand.
+Beim `unitState` handelt es sich um dasselbe Objekt, das der Player an den Host sendet, wenn sich der Status ändert. Wenn der Player diese Datenstruktur im Startkommando bekommt, stellt er einen vorherigen Bearbeitungsstand wieder her und meldet als neuen Status nur Abweichungen zu diesem Stand.
 
 Grundsätzlich sind die Eigenschaften der Datenstruktur `unitState` optional. Es sollte nur das übergeben werden, was sich geändert hat.
 
@@ -283,11 +270,7 @@ Mögliche Werte:
 * `SOME`: Einige Antworten wurden gegeben
 * `COMPLETE`: Alle Antworten wurden gegeben
 
-::: {.callout-tip}
-
-## Hinweis Validierung
-
-Eine Validierung kann problematisch sein, wenn Elemente eines Standard-Html-Formulars verwendet werden. Wenn als Typ eines `<input>`-Elementes beispielsweise eine Zahl gesetzt ist, dann wird eine Texteingabe nicht verfügbar. Die Validierung verhindert also den Zugriff auf fehlerhafte Eingaben.
+> Hinweis Validierung: Eine Validierung kann problematisch sein, wenn Elemente eines Standard-Html-Formulars verwendet werden. Wenn als Typ eines `<input>`-Elementes beispielsweise eine Zahl gesetzt ist, dann wird eine Texteingabe nicht verfügbar. Die Validierung verhindert also den Zugriff auf fehlerhafte Eingaben.
 
 > Hinweis "required": Ob eine Antwort als "erforderlich" -- also als "required" -- gewertet wird, sollte gezielt gesteuert werden. Das Player-Modul sollte "responses complete" nur für die als erforderlich markierten Elemente melden. Dann meldet der Player sofort nach Start der Unit "responses complete", wenn die Unit keine Elemente mit der Markierung "erforderlich" hat.
 
@@ -295,91 +278,43 @@ Eine Validierung kann problematisch sein, wenn Elemente eines Standard-Html-Form
 
 Hier soll dem Host mitgeteilt werden, um welchen Datentyp es sich bei den Datenteilen `dataParts` handelt. Beispiel: `iqb-standard@1.2`. Ein Player kann also eine exotische, nicht dokumentierte Unit-Definition verwenden, erzeugt aber Antworten in einem dokumentierten Format.
 
-## `playerConfig`
+## Konfiguration des Players
 
-### `unitNumber`, `unitTitle`, `unitId`
+Die Property `playerConfig` beeinflusst in starkem Maße, wie der Player die Unit darstellt.
 
-Diese Angaben werden benötigt, wenn der Player den gesamten verfügbaren Bildschirm des Browsers einnehmen soll. Dann kann der Host keine Orientierung darüber geben, an welcher Stelle des Testablaufes die Testperson gerade ist und der Player muss dies übernehmen. Für diesen Fall sind diese Informationen gedacht.
-
-### `logPolicy`
-
-Aus einem Forschungsinteresse heraus könnte der Player angehalten sein, viele Zustandsänderungen an den Host zu melden. Das kann vom Scrollverhalten bis zum Mitschreiben Mausbewegungen gehen. Allerdings gibt es sehr viele Anwendungsfälle für das Player-Modul, wo dieses Logging abgestellt werden sollte. Beispiele: Review der Unit während der Qualitätsprüfung, Verwendung als Beispielaufgabe, Präsentation der Antworten zur manuellen Kodierung. Aus diesem Grund kann dem Player differenziert mitgeteilt werden, ob bzw. in welchem Maße Logs an den Host geschickt werden sollen: `DISABLED`, `LEAN`, `RICH`, `DEBUG`. Die Interpretation der Werte ist derzeit nicht festgelegt.
-
-### `pagingMode`
-
-Wenn die Unit aus mehreren Seiten besteht, wird über diesen Parameter festgelegt, ob bzw. wie das Blättern erfolgen soll. Dieses Verhalten sollte in einem Test einheitlich sein, so dass es kein fixer Parameter der Unit-Definition ist. Verschiedene Tests können unterschiedliches Blätter-Verhalten wünschen, ohne dass die Unit-Definition geändert werden muss.
-
-Mögliche Werte:
-
-* `SEPARATE`: Die Seiten werden einzeln angezeigt, so wie die Seitennavigation es steuert. Die Animation des Seitenwechsels ist horizontal.
-* `BUTTONS`: Die Seiten werden einzeln angezeigt, aber es werden Buttons eingeblendet, die auf weitere Seiten hinweisen und bei Klick eine Seitennavigation auslösen. Die Animation des Seitenwechsels ist vertikal.
-* `CONCAT_SCROLL`: Alle Seiten werden zu einer einzigen Seite zusammengelegt (gestapelt). Die Testperson scrollt vertikal und bemerkt nicht, dass es mehrere Seiten gibt. Sollte eine Seitennavigation aktiv sein, wird entsprechend gescrollt.
-* `CONCAT_SCROLL_SNAP`: Alle Seiten werden zu einer einzigen Seite zusammengelegt, jedoch ist stets nur eine Seite zu sehen. Die Testperson scrollt vertikal und die Seiten "schnappen" in den Sichtbereich, so dass nie zwei Seiten gleichzeitig zu sehen sind. Dieser Modus ist vorteilhaft, wenn die Zeit, die eine Testperson auf einer Seite verbringt, gemessen werden soll. Man erreicht eine intuitive Art des Seitenwechsels, verliert aber nicht die Information "time on page".
+* `unitNumber`, `unitTitle`, `unitId`: Diese Angaben werden benötigt, wenn der Player den gesamten verfügbaren Bildschirm des Browsers einnehmen soll. Dann kann der Host keine Orientierung darüber geben, an welcher Stelle des Testablaufes die Testperson gerade ist und der Player muss dies übernehmen. Für diesen Fall sind diese Informationen gedacht.
+* `logPolicy`: Aus einem Forschungsinteresse heraus könnte der Player angehalten sein, viele Zustandsänderungen an den Host zu melden. Das kann vom Scrollverhalten bis zum Mitschreiben Mausbewegungen gehen. Allerdings gibt es sehr viele Anwendungsfälle für das Player-Modul, wo dieses Logging abgestellt werden sollte. Beispiele: Review der Unit während der Qualitätsprüfung, Verwendung als Beispielaufgabe, Präsentation der Antworten zur manuellen Kodierung. Aus diesem Grund kann dem Player differenziert mitgeteilt werden, ob bzw. in welchem Maße Logs an den Host geschickt werden sollen: `DISABLED`, `LEAN`, `RICH`, `DEBUG`. Die Interpretation der Werte ist derzeit nicht festgelegt.
+* `pagingMode`: Wenn die Unit aus mehreren Seiten besteht, wird über diesen Parameter festgelegt, ob bzw. wie das Blättern erfolgen soll. Dieses Verhalten sollte in einem Test einheitlich sein, so dass es kein fixer Parameter der Unit-Definition ist. Verschiedene Tests können unterschiedliches Blätter-Verhalten wünschen, ohne dass die Unit-Definition geändert werden muss. Mögliche Werte:
+  * `SEPARATE`: Die Seiten werden einzeln angezeigt, so wie die Seitennavigation es steuert. Die Animation des Seitenwechsels ist horizontal.
+  * `BUTTONS`: Die Seiten werden einzeln angezeigt, aber es werden Buttons eingeblendet, die auf weitere Seiten hinweisen und bei Klick eine Seitennavigation auslösen. Die Animation des Seitenwechsels ist vertikal.
+  * `CONCAT_SCROLL`: Alle Seiten werden zu einer einzigen Seite zusammengelegt (gestapelt). Die Testperson scrollt vertikal und bemerkt nicht, dass es mehrere Seiten gibt. Sollte eine Seitennavigation aktiv sein, wird entsprechend gescrollt.
+  * `CONCAT_SCROLL_SNAP`: Alle Seiten werden zu einer einzigen Seite zusammengelegt, jedoch ist stets nur eine Seite zu sehen. Die Testperson scrollt vertikal und die Seiten "schnappen" in den Sichtbereich, so dass nie zwei Seiten gleichzeitig zu sehen sind. Dieser Modus ist vorteilhaft, wenn die Zeit, die eine Testperson auf einer Seite verbringt, gemessen werden soll. Man erreicht eine intuitive Art des Seitenwechsels, verliert aber nicht die Information "time on page".
 
 > Achtung: Scroll-snap ist nicht verlässlich. Der Scroll-snap-Modus beim Blättern ist eine standardisierte Html-Eigenschaft. Allerdings ist dieses Verhalten unterschiedlich implementiert in den Browsern bzw. Betriebssystemen. Vor der Nutzung sollten ausgiebige Tests sicherstellen, dass sich alle verwendeten Geräte wie gewünscht verhalten.
 
-### `printMode`
-
-Im Rahmen der Qualitätssicherung müssen Testaufgaben ausgiebig überprüft werden. Normalerweise begibt sich der Prüfer bzw. die Prüferin in die Rolle der Testperson und beantwortet Schritt für Schritt die Fragen. Dies kann allerdings sehr zeitaufwändig sein, insbesondere, wenn Audio-Sequenzen abgewartet werden müssen, bevor weitere Teile der Unit sichtbar werden.
-
-Um diesen Review zu erleichtern, kann der Player in den sog. Printmodus geschaltet werden. Der Host begrenzt dann das `<iframe>`-Element nicht mehr auf den Bildschirm, sondern gibt so viel Höhe, wie der Player für die Unit benötigt. Es werden alle Seiten untereinander gestapelt und alle Einschränkungen der Sichtbarkeit von Seiten bzw. Seitenabschnitten aufgehoben. Weiterhin kann der Player ein separates Styling (Markierung über `@media print`) für das Drucken aus dem Browser heraus bereitstellen.
-
-Mögliche Werte:
-
-* `OFF`: Kein Printmodus.
-* `ON`: Printmodus.
-* `ON_WITH_IDS`: Printmodus, und zusätzlich werden die IDs der Elemente der Unit eingeblendet.
-* `SELECTED_ELEMENTS_ONLY`: Wenn `elementsToHighlight` gesetzt sind, dann werden nur diese angezeigt und alle anderen Elemente werden ausgeblendet.
-
-### `elementsToHighlight`
-
-Hier kann eine Liste von (Basis-)Variablen übergeben werden, die der Player in geeigneter Weite hervorhebt (Ausgrauen des Rests, farbiger Rahmen u. ä.). Wenn zusätzlich bei `printMode` der Wert `SELECTED_ELEMENTS_ONLY` gesetzt ist, dann werden alle anderen Elemente ausgeblendet.
-
-### `enabledNavigationTargets`
-
-Diese einfache Liste von Strings informiert den Player, welche der fünf möglichen Ziele für die Unit-Navigation zur Verfügung stehen. Dann kann der Player beispielsweise den "Weiter"-Button ausblenden, wenn es keine weiteren Units gibt. Oder es wird der "Zurück"-Button ausgeblendet, wenn der Testperson grundsätzlich ein Zurückgehen nicht gestattet ist.
-
-Mögliche Werte: `NEXT`, `PREVIOUS`, `FIRST`, `LAST`, `END`.
-
-### `startPage`
-
-Sollte der Player sofort nach dem Start auf eine bestimmte Seite navigieren, kann dies hier angegeben werden. Dies ist beispielsweise bei der Anzeige von Units mit gegebenen Antworten bei der manuellen Kodierung gewünscht.
-
-### `directDownloadUrl`
-
-Sollte der Player während der Laufzeit Code nachladen müssen, kann aus Gründen der Datensicherheit nicht einfach irgendein Server genutzt werden. Dem Player muss mitgeteilt werden, welche URL dafür zulässig ist. Beispiel: GeoGebra.
-
-### `sharedParameters`
-
-Daten, die zur Laufzeit zwischen Player-Instanzen ausgetauscht werden sollen. Details siehe [hier](https://iqb-specifications.github.io/concepts/plugins/communication.html#gemeinsame-parameter-sharedparameters).
+* `printMode`: Im Rahmen der Qualitätssicherung müssen Testaufgaben ausgiebig überprüft werden. Normalerweise begibt sich der Prüfer bzw. die Prüferin in die Rolle der Testperson und beantwortet Schritt für Schritt die Fragen. Dies kann allerdings sehr zeitaufwändig sein, insbesondere, wenn Audio-Sequenzen abgewartet werden müssen, bevor weitere Teile der Unit sichtbar werden.<br/>Um diesen Review zu erleichtern, kann der Player in den sog. Printmodus geschaltet werden. Der Host begrenzt dann das `<iframe>`-Element nicht mehr auf den Bildschirm, sondern gibt so viel Höhe, wie der Player für die Unit benötigt. Es werden alle Seiten untereinander gestapelt und alle Einschränkungen der Sichtbarkeit von Seiten bzw. Seitenabschnitten aufgehoben. Weiterhin kann der Player ein separates Styling (Markierung über `@media print`) für das Drucken aus dem Browser heraus bereitstellen. Mögliche Werte:
+  * `OFF`: Kein Printmodus.
+  * `ON`: Printmodus.
+  * `ON_WITH_IDS`: Printmodus, und zusätzlich werden die IDs der Elemente der Unit eingeblendet.
+  * `SELECTED_ELEMENTS_ONLY`: Wenn `elementsToHighlight` gesetzt sind, dann werden nur diese angezeigt und alle anderen Elemente werden ausgeblendet.
+* `elementsToHighlight`: Hier kann eine Liste von (Basis-)Variablen übergeben werden, die der Player in geeigneter Weite hervorhebt (Ausgrauen des Rests, farbiger Rahmen u. ä.). Wenn zusätzlich bei `printMode` der Wert `SELECTED_ELEMENTS_ONLY` gesetzt ist, dann werden alle anderen Elemente ausgeblendet.
+* `enabledNavigationTargets`: Diese einfache Liste von Strings informiert den Player, welche der fünf möglichen Ziele für die Unit-Navigation zur Verfügung stehen. Dann kann der Player beispielsweise den "Weiter"-Button ausblenden, wenn es keine weiteren Units gibt. Oder es wird der "Zurück"-Button ausgeblendet, wenn der Testperson grundsätzlich ein Zurückgehen nicht gestattet ist. Mögliche Werte: `NEXT`, `PREVIOUS`, `FIRST`, `LAST`, `END`.
+* `startPage`: Sollte der Player sofort nach dem Start auf eine bestimmte Seite navigieren, kann dies hier angegeben werden. Dies ist beispielsweise bei der Anzeige von Units mit gegebenen Antworten bei der manuellen Kodierung gewünscht.
+* `directDownloadUrl`: Sollte der Player während der Laufzeit Code nachladen müssen, kann aus Gründen der Datensicherheit nicht einfach irgendein Server genutzt werden. Dem Player muss mitgeteilt werden, welche URL dafür zulässig ist. Beispiel: GeoGebra.
+* `sharedParameters`: Daten, die zur Laufzeit zwischen Player-Instanzen ausgetauscht werden sollen. Details siehe [hier](https://iqb-specifications.github.io/concepts/plugins/communication.html#gemeinsame-parameter-sharedparameters).
 
 
-# Meldung von Änderungen `vopStateChangedNotification`
+# Meldung von Änderungen
 
-## `sessionId`
+Die Message-Id für das Melden von Änderungen an den Host lautet `vopStateChangedNotification`.
 
-Dem Player wurde im Start-Kommando eine `sessionId` eine Kennung mitgeschickt, die der Player anschließend in jeder Nachricht verwendet. Damit wird die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit unterstützt.
-
-## `timestamp`
-
-Ein String im Standard-Format [date-time](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-date-time-string-format). Die Nutzung dieser Information ist dem Host überlassen, soll aber vor allem die korrekte Reihenfolge vieler asynchron eintreffenden Nachrichten sicherstellen.
-
-## `unitState`
-
-Hierbei handelt es sich um dasselbe [Objekt, das dem Player im Start-Kommando](#unitstate) übergeben wird, wenn der vorherige Zustand wiederhergestellt werden soll. Der Player meldet über diese Datenstruktur Änderungen.
-
-## `playerState`
-
-Hier wird der Host über die verfügbaren Seiten und die aktuelle Seite informiert. Sollte es nur eine Seite geben, kann komplett auf diese Datenbereiche verzichtet werden.
-
-* `validPages`: Dies ist ein Array von Objekten mit folgenden Eigenschaften: `id`: Kennung der Seite, `label`: Text für die Navigation; die Reihenfolge der genannten Seiten ist relevant.
-* `currentPage`: Der Player berichtet hierüber über eine erfolgte Seitennavigation. Es wird die ID bzw. der Key der neuen Seite übergeben.
-* `sharedParameters`: Daten, die zur Laufzeit zwischen Player-Modulen ausgetauscht werden sollen. Details siehe [hier](https://iqb-specifications.github.io/concepts/plugins/communication.html#gemeinsame-parameter-sharedparameters).
-
-## `log`
-
-Die Eigenschaften `timeStamp`, `key` und `content` liefern einen Log-Eintrag. In einer Nachricht zur Statusänderung können mehrere Log-Einträge gleichzeitig geschickt werden.
-
-Es gibt keine Konventionen zur Nutzung dieses Features.
+* `sessionId`: Dem Player wurde im Start-Kommando eine `sessionId` eine Kennung mitgeschickt, die der Player anschließend in jeder Nachricht verwendet. Damit wird die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit unterstützt.
+* `timestamp`: Ein String im Standard-Format [date-time](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-date-time-string-format). Die Nutzung dieser Information ist dem Host überlassen, soll aber vor allem die korrekte Reihenfolge vieler asynchron eintreffenden Nachrichten sicherstellen.
+* `unitState`: Hierbei handelt es sich um dasselbe [Objekt, das dem Player im Start-Kommando](#unit-status) übergeben wird, wenn der vorherige Zustand wiederhergestellt werden soll. Der Player meldet über diese Datenstruktur Änderungen.
+* `playerState`: Hier wird der Host über die verfügbaren Seiten und die aktuelle Seite informiert. Sollte es nur eine Seite geben, kann komplett auf diese Datenbereiche verzichtet werden.
+  * `validPages`: Dies ist ein Array von Objekten mit folgenden Eigenschaften: `id`: Kennung der Seite, `label`: Text für die Navigation; die Reihenfolge der genannten Seiten ist relevant.
+  * `currentPage`: Der Player berichtet hierüber über eine erfolgte Seitennavigation. Es wird die ID bzw. der Key der neuen Seite übergeben.
+  * `sharedParameters`: Daten, die zur Laufzeit zwischen Player-Modulen ausgetauscht werden sollen. Details siehe [hier](https://iqb-specifications.github.io/concepts/plugins/communication.html#gemeinsame-parameter-sharedparameters).
+* `log`: Die Eigenschaften `timeStamp`, `key` und `content` liefern einen Log-Eintrag. In einer Nachricht zur Statusänderung können mehrere Log-Einträge gleichzeitig geschickt werden. Es gibt keine Konventionen zur Nutzung dieses Features.
 
 :::
