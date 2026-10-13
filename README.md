@@ -88,19 +88,19 @@ Weitere Parameter:
 
 * `unitDefinitionType`: Sollte es Varianten oder Versionen von Unit-Definitionen geben, kann dies hier dem Player mitgeteilt werden. Alternativ (oder parallel) kann natürlich diese Information als Teil der Datenstruktur der Unit-Definition übergeben werden.
 * `unitState`: Sollte die Unit wiederholt präsentiert werden, soll der vorherige Bearbeitungsstatus wiederhergestellt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#unit-status).
-* `playerConfig`: Hier werden Parameter übergeben, die die Anzeige und die Interaktion steuern. Beispielsweise kann die Art und Weise des Blätterns zur nächsten Seite festgelegt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#playerconfig).
+* `playerConfig`: Hier werden Parameter übergeben, die die Anzeige und die Interaktion steuern. Beispielsweise kann die Art und Weise des Blätterns zur nächsten Seite festgelegt werden. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#konfiguration-des-players).
  
 ## 4 State Changed Notification
 
-> Ausführliche Darstellung der Meldung zur Statusänderung siehe [unten](#meldung-von-änderungen-vopstatechangednotification).
+> Ausführliche Darstellung der Meldung zur Statusänderung siehe [unten](#meldung-von-änderungen).
 
 Sobald eine Interaktion stattgefunden hat, die als Antwort wichtig wäre oder die bei einem wiederholten Aufruf der Unit wiederhergestellt werden soll, meldet der Player diese Änderung. Parameter:
 
 * `sessionId`: Die Kennung aus dem Start-Kommando, um die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit zu unterstützen.
 * `timeStamp`: Ein String im Standard-Format [date-time](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-date-time-string-format). Die Nutzung dieser Information ist dem Host überlassen, soll aber vor allem die korrekte Reihenfolge vieler asynchron eintreffender Nachrichten sicherstellen.
-* `unitState`: Daten der Antworten im weiteren Sinne. Diese dienen der Auswertung und der Wiederherstellung beim Zurückblättern. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#unitstate).
-* `playerState`: Hier schickt der Player Informationen, die dem Host helfen können, die UI anzupassen. Beispielsweise wird so ein Wechsel der Seite berichtet, damit der Host in der Navigationsdarstellung die aktive Seite anders darstellt. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#playerstate).
-* `log`: Hierüber werden Log-Einträge geschickt. Dies sind Ereignisse, die nicht unbedingt einen Status ändern, sondern nur der Rekonstruktion der Beantwortung über die Zeit dienen können. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#log).
+* `unitState`: Daten der Antworten im weiteren Sinne. Diese dienen der Auswertung und der Wiederherstellung beim Zurückblättern. Weitere Erläuterungen zu diesem Datenobjekt finden Sie [hier](#unit-status).
+* `playerState`: Hier schickt der Player Informationen, die dem Host helfen können, die UI anzupassen. Beispielsweise wird so ein Wechsel der Seite berichtet, damit der Host in der Navigationsdarstellung die aktive Seite anders darstellt (s. unten).
+* `log`: Hierüber werden Log-Einträge geschickt. Dies sind Ereignisse, die nicht unbedingt einen Status ändern, sondern nur der Rekonstruktion der Beantwortung über die Zeit dienen können (s. unten).
 
 ## 5 Page Navigation Command
 
@@ -116,7 +116,7 @@ Der Player kann Buttons einblenden, über die die Testperson zu einer anderen Un
 Über diese Nachricht fordert der Player eine Unit-Navigation an. Ob dann tatsächlich eine Unit-Navigation erfolgt, entscheidet der Host. Beispielsweise wird in der Voransicht einer Unit im Autorensystem IQB-Studio nur kurz eine Nachricht eingeblendet, dass eine Unit-Navigation angefordert wurde.
 
 * `sessionId`: Die Kennung aus dem Start-Kommando, um die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit zu unterstützen.
-* `target`: Ziel-Unit. Dies ist allerdings keine ID einer konkreten Unit, sondern ein Symbol für eine relativ zur aktuellen Unit befindlichen Unit: `next`, `previous`, `first`, `last`, `end`. Die möglichen Ziele kennt der Player aus dem Start-Kommando.
+* `target`: Ziel-Unit. Dies ist allerdings keine ID einer konkreten Unit, sondern ein Symbol für eine relativ zur aktuellen Unit befindlichen Unit: `NEXT`, `PREVIOUS`, `FIRST`, `LAST`, `END`. Die möglichen Ziele kennt der Player aus dem Start-Kommando.
 
 ## 7 Navigation Denied Notification
 
@@ -139,7 +139,7 @@ Diese Nachricht soll den Player darüber informieren, dass sich die Konfiguratio
 Parameter:
 
 * `sessionId`: Die Kennung aus dem Start-Kommando, um die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit zu unterstützen.
-* `playerConfig`: Bitte diese Datenstruktur [hier nachlesen](#playerconfig)
+* `playerConfig`: Bitte diese Datenstruktur [hier nachlesen](#konfiguration-des-players)
 
 ## 9 Runtime Error Notification
 
