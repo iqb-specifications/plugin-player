@@ -110,7 +110,7 @@ Im Testablauf können fehlende oder falsche Antworten problematisch sein. Insbes
 
 Sollte dies nicht der Fall sein, sollte der Player fehlende oder falsche Antworten visuell markieren. In normalen Formularen erfolgt dies, wenn der Eingabefokus auf ein Eingabeelement kommt und ohne weitere Eingabe zum nächsten Element wechselt. Aber wenn ein Eingabeelement nie den Fokus bekommt, kann die Fehlersituation nicht erzeugt werden. Die Alternative, alle Eingabeelemente beim Betreten der Unit als fehlerhaft darzustellen, wäre keine gute UI-Entscheidung.
 
-Die Nachricht `vopNavigationDeniedNotification` des Hosts ist also als Aufforderung an den Player zu verstehen, fehlende oder falsche Eingaben visuell darzustellen. Technisch kann das z. B. über `markAllAsTouched()` gehen. Parameter:
+Die Nachricht `vopNavigationDeniedNotification` des Hosts ist also als Aufforderung an den Player zu verstehen, fehlende oder falsche Eingaben visuell darzustellen. Technisch kann das bei Angular Material z. B. über `markAllAsTouched()` gehen. Parameter:
 
 * `sessionId`: Die Kennung aus dem Start-Kommando, um die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit zu unterstützen.
 * `reason`: Hinweis für den Player, warum die Navigation verweigert wurde: `presentationIncomplete` und/oder `responsesIncomplete`.
