@@ -132,9 +132,8 @@ Parameter:
 Diese Nachricht soll die Host-Anwendung darüber informieren, dass während der Ausführung von Code im Player ein Fehler aufgetreten ist, der die Beantwortung beeinträchtigen könnte. Die Interpretation ist dem Host überlassen. Sie reicht von Benachrichtigung des Users über die Freigabe der Navigation (presentationProgress verhindert normalerweise das Weiterblättern) bis zum Abbruch der Testung.
 
 * `sessionId`: Die Kennung aus dem Start-Kommando, um die korrekte Zuordnung der Nachricht bzw. der darin enthaltenen Daten zur Unit zu unterstützen.
-* `code`, `message`: Strings, die den Fehler beschreiben.
+* `code`, `message`: Strings, die den Fehler beschreiben. Prinzipiell ist diese Liste offen, aber im IQB-Kontext werden [diese Codes](#fehlercodes) verwendet.
 
-> Achtung: Für den Code sollte es eine Liste von möglichen Werten geben, damit die Host-Anwendungen konsistent reagieren. Aktuell liegen hierzu noch zu wenig Erfahrungen vor. Beispiele: `AUDIO_CORRUPT`, `GEOGEBRA_CRASH`
 
 ## 10 Widget Call
 
@@ -302,5 +301,31 @@ Die Message-Id für das Melden von Änderungen an den Host lautet `vopStateChang
   * `currentPage`: Der Player berichtet hierüber über eine erfolgte Seitennavigation. Es wird die ID bzw. der Key der neuen Seite übergeben.
   * `sharedParameters`: Daten, die zur Laufzeit zwischen Player-Modulen ausgetauscht werden sollen. Details siehe [hier](https://iqb-specifications.github.io/concepts/plugins/communication.html#gemeinsame-parameter-sharedparameters).
 * `log`: Die Eigenschaften `timeStamp`, `key` und `content` liefern einen Log-Eintrag. In einer Nachricht zur Statusänderung können mehrere Log-Einträge gleichzeitig geschickt werden. Es gibt keine Konventionen zur Nutzung dieses Features.
+
+# Fehlercodes
+
+In `vopRuntimeErrorNotification` ist `code` ein freier String. Die folgende Liste von Codes wird als Orientierung veröffentlicht. Sie ist weitgehend im [Aspect-Player](https://github.com/iqb-berlin/verona-modules-aspect) des IQB umgesetzt.
+
+| Code | Bedeutung | Herkunft |
+|---|---|---|
+| **Startkommando** |||
+| `SESSION_ID_MISSING` | Das Startkommando enthält keine `sessionId`. | Entwurf |
+| `WRONG_SESSION_ID` | Eine Nachricht trägt eine fremde `sessionId`. | Entwurf |
+| `UNIT_DEFINITION_MISSING` | Das Startkommando enthält keine Unit-Definition. | Entwurf |
+| `UNIT_DEFINITION_TYPE_UNSUPPORTED` | Der Player unterstützt den `unitDefinitionType` nicht. | Entwurf |
+| `UNIT_STATE_TYPE_UNSUPPORTED` | Der Player unterstützt den `unitStateDataType` nicht. | Entwurf |
+| **Unit-Definition** |||
+| `UNIT_DEFINITION_NOT_READABLE` | Die Unit-Definition lässt sich nicht lesen. | Aspect (bisher nur eigener Dialog) |
+| `UNIT_DEFINITION_NEWER` | Die Unit-Definition ist neuer, als der Player verarbeiten kann. | Aspect (bisher nur eigener Dialog) |
+| `UNIT_DEFINITION_OUTDATED` | Die Unit-Definition ist zu alt für den Player. | Aspect (bisher nur eigener Dialog) |
+| **Ressourcen** |||
+| `IMAGE_NOT_LOADING` | Ein Bild lädt nicht. | Entwurf, Aspect |
+| `GEOGEBRA_NOT_LOADING` | Das GeoGebra-Paket lädt nicht. | Entwurf, Aspect |
+| `GEOMETRY_TIMEOUT` | Ein GeoGebra-Element ist nicht innerhalb der Frist bereit. | Aspect |
+| `MEDIA_TIMEOUT` | Audio oder Video ist nicht innerhalb der Frist geladen. | Aspect; ersetzt `audio-timeot` und `video-timeout` des Entwurfs |
+| `MEDIA_DURATION_ERROR` | Die Länge eines Audios oder Videos ist nicht ermittelbar. | Entwurf, Aspect |
+| **Sonstiges** |||
+| `RUNTIME_ERROR` | Ein sonstiger Fehler. | Entwurf |
+
 
 :::
