@@ -306,26 +306,31 @@ Die Message-Id für das Melden von Änderungen an den Host lautet `vopStateChang
 
 In `vopRuntimeErrorNotification` ist `code` ein freier String. Die folgende Liste von Codes wird als Orientierung veröffentlicht. Sie ist weitgehend im [Aspect-Player](https://github.com/iqb-berlin/verona-modules-aspect) des IQB umgesetzt.
 
-| Code | Bedeutung | Herkunft |
-|---|---|---|
-| **Startkommando** |||
-| `SESSION_ID_MISSING` | Das Startkommando enthält keine `sessionId`. | Entwurf |
-| `WRONG_SESSION_ID` | Eine Nachricht trägt eine fremde `sessionId`. | Entwurf |
-| `UNIT_DEFINITION_MISSING` | Das Startkommando enthält keine Unit-Definition. | Entwurf |
-| `UNIT_DEFINITION_TYPE_UNSUPPORTED` | Der Player unterstützt den `unitDefinitionType` nicht. | Entwurf |
-| `UNIT_STATE_TYPE_UNSUPPORTED` | Der Player unterstützt den `unitStateDataType` nicht. | Entwurf |
-| **Unit-Definition** |||
-| `UNIT_DEFINITION_NOT_READABLE` | Die Unit-Definition lässt sich nicht lesen. | Aspect (bisher nur eigener Dialog) |
-| `UNIT_DEFINITION_NEWER` | Die Unit-Definition ist neuer, als der Player verarbeiten kann. | Aspect (bisher nur eigener Dialog) |
-| `UNIT_DEFINITION_OUTDATED` | Die Unit-Definition ist zu alt für den Player. | Aspect (bisher nur eigener Dialog) |
-| **Ressourcen** |||
-| `IMAGE_NOT_LOADING` | Ein Bild lädt nicht. | Entwurf, Aspect |
-| `GEOGEBRA_NOT_LOADING` | Das GeoGebra-Paket lädt nicht. | Entwurf, Aspect |
-| `GEOMETRY_TIMEOUT` | Ein GeoGebra-Element ist nicht innerhalb der Frist bereit. | Aspect |
-| `MEDIA_TIMEOUT` | Audio oder Video ist nicht innerhalb der Frist geladen. | Aspect; ersetzt `audio-timeot` und `video-timeout` des Entwurfs |
-| `MEDIA_DURATION_ERROR` | Die Länge eines Audios oder Videos ist nicht ermittelbar. | Entwurf, Aspect |
-| **Sonstiges** |||
-| `RUNTIME_ERROR` | Ein sonstiger Fehler. | Entwurf |
+### Startkommando
+
+* `SESSION_ID_MISSING`: Das Startkommando enthält keine `sessionId`.
+* `WRONG_SESSION_ID`: Eine Nachricht trägt eine fremde `sessionId`.
+* `UNIT_DEFINITION_MISSING`: Das Startkommando enthält keine Unit-Definition.
+* `UNIT_DEFINITION_TYPE_UNSUPPORTED`: Der Player unterstützt den `unitDefinitionType` nicht.
+* `UNIT_STATE_TYPE_UNSUPPORTED`: Der Player unterstützt den `unitStateDataType` nicht.
+
+### Unit-Definition
+
+* `UNIT_DEFINITION_NOT_READABLE`: Die Unit-Definition lässt sich nicht lesen.
+* `UNIT_DEFINITION_NEWER`: Die Unit-Definition ist neuer, als der Player verarbeiten kann.
+* `UNIT_DEFINITION_OUTDATED`: Die Unit-Definition ist zu alt für den Player.
+
+### Ressourcen/Media
+
+* `IMAGE_NOT_LOADING`: Ein Bild lädt nicht.
+* `GEOGEBRA_NOT_LOADING`: Das GeoGebra-Paket lädt nicht.
+* `GEOMETRY_TIMEOUT`: Ein GeoGebra-Element ist nicht innerhalb der Frist bereit.
+* `MEDIA_TIMEOUT`: Audio oder Video ist nicht innerhalb der Frist geladen.
+* `MEDIA_DURATION_ERROR`: Die Länge eines Audios oder Videos ist nicht ermittelbar.
+
+### Sonstiges
+
+* `RUNTIME_ERROR`: Ein sonstiger Fehler.
 
 
 :::
