@@ -324,7 +324,7 @@ In `vopRuntimeErrorNotification` ist `code` ein freier String. Die folgende List
 
 * `IMAGE_NOT_LOADING`: Ein Bild lädt nicht.
 * `GEOGEBRA_NOT_LOADING`: Das GeoGebra-Paket lädt nicht.
-* `GEOMETRY_TIMEOUT`: Ein GeoGebra-Element ist nicht innerhalb der Frist bereit.
+* `GEOGEBRA_TIMEOUT`: Ein GeoGebra-Element ist nicht innerhalb der Frist bereit.
 * `MEDIA_TIMEOUT`: Audio oder Video ist nicht innerhalb der Frist geladen.
 * `MEDIA_DURATION_ERROR`: Die Länge eines Audios oder Videos ist nicht ermittelbar.
 
